@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001/comperio-lotto/us-central1/api';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001/lotto-app-51b1f/us-central1/api';
 
 function HomePage() {
   const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
@@ -70,7 +70,7 @@ function HomePage() {
           
           {!status?.hasRound ? (
             <div className="info-box">
-              <p>Trenutno nema aktivnih kola.</p>
+              <p>Uplate trenutno nisu aktivne.</p>
             </div>
           ) : (
             <>
@@ -119,7 +119,7 @@ function HomePage() {
         </section>
 
         <section className="history-section">
-          <h2>Prethodna kola</h2>
+          <h2>Rezultati prethodnih 5 kola</h2>
           {history.length === 0 ? (
             <div className="info-box">
               <p>Nema prethodnih kola.</p>
@@ -143,7 +143,7 @@ function HomePage() {
                     </span>
                   </div>
                   <div className="history-info">
-                    <span>Listića: <strong>{round.ticketCount}</strong></span>
+                    <span>Broj uplaćenih listića: <strong>{round.ticketCount}</strong></span>
                   </div>
                   {round.results && (
                     <div className="history-results">
