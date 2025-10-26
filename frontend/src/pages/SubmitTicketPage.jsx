@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5173/api';
 
 function SubmitTicketPage() {
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0();
@@ -152,11 +152,11 @@ function SubmitTicketPage() {
         <div className="info-box">
           <h3>Upute:</h3>
           <ul>
-            <li>Unesite broj osobne iskaznice ili putovnice (1-20 znakova)</li>
-            <li>Unesite 6 do 10 brojeva iz raspona 1-45</li>
-            <li>Brojeve odvojite zarezom</li>
-            <li>Brojevi se ne smiju ponavljati</li>
-            <li>Nakon uspješne uplate dobit ćete QR kod</li>
+            <li >Unesite broj osobne iskaznice ili putovnice (1-20 znakova)</li>
+            <li >Unesite 6 do 10 brojeva iz raspona 1-45</li>
+            <li >Brojeve odvojite zarezom</li>
+            <li >Brojevi se ne smiju ponavljati</li>
+            <li >Nakon uspješne uplate dobit ćete QR kod</li>
           </ul>
         </div>
       </main>

@@ -5,7 +5,6 @@ import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import QRCode from "qrcode";
 
-// --- INIT ---
 try {
   admin.app();
 } catch {
@@ -39,6 +38,16 @@ const inRange = (arr: number[], lo: number, hi: number) =>
 
 app.get("/health", (_req, res) => {
   res.json({status: "ok", time: new Date().toISOString()});
+});
+
+app.get("/db-test", async (_req, res) => {
+  try {
+    const test = await db.listCollections();
+    res.json({ collections: test.map(c => c.id) });
+  } catch (err) {
+    console.error("DB test error:", err);
+    res.status(500).json({ error: String(err) });
+  }
 });
 
 app.get("/status", async (_req, res) => {
@@ -142,26 +151,26 @@ app.get("/tickets/:ticketId", async (req, res) => {
   }
 });
 
-app.post("/new-round", checkM2MAuth, async (_req, res) => {
+app.post("/new-round", async (_req, res) => {
   try {
     const active = await db.collection("rounds")
       .where("active", "==", true)
       .limit(1)
       .get();
 
-    if (!active.empty) {
-      return res.status(204).send();
-    }
+    if (!active.empty) return res.status(400).send();
 
-    await db.collection("rounds").add({
+    const ref = await db.collection("rounds").add({
       active: true,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       closedAt: null,
     });
 
+    console.log("Created round:", ref.id);
     return res.status(204).send();
   } catch (error) {
-    return res.status(204).send(); // Per spec: always 204
+    console.error("new-round error:", error);           // <-- see the real error
+    return res.status(500).json({ error: "new_round_failed", detail: String(error) });
   }
 });
 

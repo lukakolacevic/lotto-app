@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5173/api';
 
 function HomePage() {
   const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
@@ -37,7 +37,7 @@ function HomePage() {
   return (
     <div className="container">
       <header className="header">
-        <h1>🎱 Loto 6/45</h1>
+        <h1>🎱 Loregreto 6/45</h1>
         {isAuthenticated ? (
           <div className="user-info">
             <span>Prijavljeni kao: <strong>{user?.email || user?.name}</strong></span>
