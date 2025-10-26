@@ -122,7 +122,7 @@ function HomePage() {
           <h2>Rezultati prethodnih 5 kola</h2>
           {history.length === 0 ? (
             <div className="info-box">
-              <p>Nema prethodnih kola.</p>
+              <p>Nema zatvorenih kola.</p>
             </div>
           ) : (
             <div className="history-list">

@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import QRCode from "qrcode";
+import { FieldValue } from "firebase-admin/firestore";
 
 try {
   admin.app();
@@ -199,7 +200,7 @@ app.post("/new-round", async (_req, res) => {
 
     const ref = await db.collection("rounds").add({
       active: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
       closedAt: null,
     });
 
@@ -225,7 +226,7 @@ app.post("/close", checkM2MAuth, async (_req, res) => {
     const doc = snap.docs[0];
     await doc.ref.update({
       active: false,
-      closedAt: admin.firestore.FieldValue.serverTimestamp(),
+      closedAt: FieldValue.serverTimestamp(),
     });
 
     return res.status(204).send();
@@ -314,7 +315,7 @@ app.post("/tickets", checkUserAuth, async (req, res) => {
       roundId,
       idNumber,
       numbers,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
       userId: req.auth?.payload?.sub || "anonymous",
     });
 
