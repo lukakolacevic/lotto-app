@@ -154,8 +154,9 @@ app.get("/tickets/:ticketId", async (req, res) => {
 app.get("/rounds/history", async (_req, res) => {
   try {
     const roundsSnap = await db.collection("rounds")
-      .orderBy("createdAt", "desc")
-      .limit(10)
+      .where("active", "==", false)
+      .orderBy("closedAt", "desc")
+      .limit(5)
       .get();
 
     const rounds = await Promise.all(
