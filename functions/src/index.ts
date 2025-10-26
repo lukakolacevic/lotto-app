@@ -151,6 +151,42 @@ app.get("/tickets/:ticketId", async (req, res) => {
   }
 });
 
+app.get("/rounds/history", async (_req, res) => {
+  try {
+    const roundsSnap = await db.collection("rounds")
+      .orderBy("createdAt", "desc")
+      .limit(10)
+      .get();
+
+    const rounds = await Promise.all(
+      roundsSnap.docs.map(async (doc) => {
+        const data = doc.data();
+        const roundId = doc.id;
+
+        const resultsDoc = await db.collection("roundResults").doc(roundId).get();
+        const ticketsSnap = await db.collection("tickets")
+          .where("roundId", "==", roundId)
+          .count()
+          .get();
+
+        return {
+          id: roundId,
+          active: data.active,
+          createdAt: data.createdAt?.toDate?.()?.toISOString() || null,
+          closedAt: data.closedAt?.toDate?.()?.toISOString() || null,
+          ticketCount: ticketsSnap.data().count,
+          results: resultsDoc.exists ? resultsDoc.data()?.numbers : null,
+        };
+      })
+    );
+
+    return res.json(rounds);
+  } catch (error) {
+    console.error("rounds/history error:", error);
+    return res.status(500).json({error: "internal_error"});
+  }
+});
+
 app.post("/new-round", async (_req, res) => {
   try {
     const active = await db.collection("rounds")

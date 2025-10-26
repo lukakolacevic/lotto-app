@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5173/api';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001/comperio-lotto/us-central1/api';
 
 function HomePage() {
   const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
   const [status, setStatus] = useState(null);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStatus();
+    fetchHistory();
   }, []);
 
   const fetchStatus = async () => {
@@ -22,6 +24,16 @@ function HomePage() {
       console.error('Error fetching status:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchHistory = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/rounds/history`);
+      const data = await response.json();
+      setHistory(data);
+    } catch (error) {
+      console.error('Error fetching history:', error);
     }
   };
 
@@ -103,6 +115,49 @@ function HomePage() {
                 </div>
               )}
             </>
+          )}
+        </section>
+
+        <section className="history-section">
+          <h2>Prethodna kola</h2>
+          {history.length === 0 ? (
+            <div className="info-box">
+              <p>Nema prethodnih kola.</p>
+            </div>
+          ) : (
+            <div className="history-list">
+              {history.map((round) => (
+                <div key={round.id} className="history-item">
+                  <div className="history-header">
+                    <span className={`badge ${round.active ? 'active' : 'closed'}`}>
+                      {round.active ? 'Aktivno' : 'Zatvoreno'}
+                    </span>
+                    <span className="history-date">
+                      {round.createdAt ? new Date(round.createdAt).toLocaleDateString('hr-HR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      }) : 'N/A'}
+                    </span>
+                  </div>
+                  <div className="history-info">
+                    <span>Listića: <strong>{round.ticketCount}</strong></span>
+                  </div>
+                  {round.results && (
+                    <div className="history-results">
+                      <span className="results-label">Izvučeni brojevi:</span>
+                      <div className="numbers small">
+                        {round.results.map((num, idx) => (
+                          <span key={idx} className="number-ball small">{num}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </section>
       </main>
