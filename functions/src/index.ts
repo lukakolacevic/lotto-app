@@ -199,7 +199,9 @@ app.post("/close", checkM2MAuth, async (_req, res) => {
 
 app.post("/store-results", checkM2MAuth, async (req, res) => {
   try {
-    const numbers: number[] = Array.isArray(req.body?.numbers) ? req.body.numbers : [];
+    const numbers: number[] = Array.isArray(req.body?.numbers)
+      ? req.body.numbers
+      : [];
 
     const closed = await db.collection("rounds")
       .where("active", "==", false)
@@ -208,7 +210,7 @@ app.post("/store-results", checkM2MAuth, async (req, res) => {
       .get();
 
     if (closed.empty) {
-      return res.status(400).json({error: "no_closed_round"});
+      return res.status(400).json({ error: "no_closed_round" });
     }
 
     const roundDoc = closed.docs[0];
@@ -216,19 +218,22 @@ app.post("/store-results", checkM2MAuth, async (req, res) => {
 
     const existing = await db.collection("roundResults").doc(roundId).get();
     if (existing.exists) {
-      return res.status(400).json({error: "results_already_stored"});
+      return res.status(400).json({ error: "results_already_stored" });
     }
 
+    const { FieldValue } = admin.firestore;
     await db.collection("roundResults").doc(roundId).set({
       numbers,
-      storedAt: admin.firestore.FieldValue.serverTimestamp(),
+      storedAt: FieldValue.serverTimestamp(),
     });
 
     return res.status(204).send();
   } catch (error) {
-    return res.status(400).json({error: "bad_request"});
+    console.error("store-results error:", error);
+    return res.status(400).json({ error: "bad_request", detail: String(error) });
   }
 });
+
 
 app.post("/tickets", checkUserAuth, async (req, res) => {
   try {
