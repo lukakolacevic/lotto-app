@@ -259,7 +259,6 @@ app.post("/store-results", checkM2MAuth, async (req, res) => {
       return res.status(400).json({ error: "results_already_stored" });
     }
 
-    const { FieldValue } = admin.firestore;
     await db.collection("roundResults").doc(roundId).set({
       numbers,
       storedAt: FieldValue.serverTimestamp(),
