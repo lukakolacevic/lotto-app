@@ -72,10 +72,10 @@ function RoundDetailPage() {
 
       <main className="round-detail">
         <div className="round-card">
-          <div className="round-status-banner">
+          <div className={`round-status-banner ${!round.active && !round.results ? 'just-closed' : ''}`}>
             <div className="status-badge-wrapper">
-              <span className={`badge large ${round.active ? 'active' : 'closed'}`}>
-                {round.active ? '🟢 Aktivno kolo' : '🔴 Zatvoreno kolo'}
+              <span className={`badge large ${round.active ? 'active' : (round.results ? 'closed' : 'just-closed')}`}>
+                {round.active ? '🟢 Aktivno kolo' : (round.results ? '🔴 Zatvoreno kolo' : '🟡 Upravo zatvoreno')}
               </span>
             </div>
             <div className="round-id-display">

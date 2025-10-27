@@ -167,6 +167,12 @@ body {
   color: white;
 }
 
+.badge.just-closed {
+  background: #ffc107;
+  color: #333;
+  font-weight: 600;
+}
+
 .badge.closed {
   background: #dc3545;
   color: white;
@@ -687,6 +693,21 @@ body {
   margin-bottom: 2rem;
   text-align: center;
   color: white;
+}
+
+.round-status-banner.just-closed {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #333;
+}
+
+.round-status-banner.just-closed .round-id-label,
+.round-status-banner.just-closed .round-id-value {
+  color: #333;
+  opacity: 1;
+}
+
+.round-status-banner.just-closed .round-id-value {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .status-badge-wrapper {

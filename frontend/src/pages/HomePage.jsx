@@ -98,8 +98,8 @@ function HomePage() {
               <div className="info-box">
                 <div className="info-item">
                   <span className="label">Status kola:</span>
-                  <span className={`badge ${status.active ? 'active' : 'closed'}`}>
-                    {status.active ? 'Uplate aktivne' : 'Uplate zatvorene'}
+                  <span className={`badge ${status.active ? 'active' : (status.results ? 'closed' : 'just-closed')}`}>
+                    {status.active ? 'Uplate aktivne' : (status.results ? 'Uplate zatvorene' : 'Upravo zatvoreno')}
                   </span>
                 </div>
                 <div className="info-item">
@@ -182,11 +182,16 @@ function HomePage() {
             </div>
           ) : (
             <div className="history-list">
-              {history.map((round) => (
+              {history.map((round) => {
+                const isJustClosed = !round.active && !round.results;
+                const badgeClass = round.active ? 'active' : (isJustClosed ? 'just-closed' : 'closed');
+                const badgeText = round.active ? 'Aktivno' : (isJustClosed ? 'Upravo zatvoreno' : 'Zatvoreno');
+                
+                return (
                 <Link key={round.id} to={`/round/${round.id}`} className="history-item clickable">
                   <div className="history-header">
-                    <span className={`badge ${round.active ? 'active' : 'closed'}`}>
-                      {round.active ? 'Aktivno' : 'Zatvoreno'}
+                    <span className={`badge ${badgeClass}`}>
+                      {badgeText}
                     </span>
                     <span className="history-date">
                       {round.createdAt ? new Date(round.createdAt).toLocaleDateString('hr-HR', {
@@ -212,7 +217,8 @@ function HomePage() {
                     </div>
                   )}
                 </Link>
-              ))}
+                );
+              })}
             </div>
           )}
           </section>
