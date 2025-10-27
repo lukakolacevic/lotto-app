@@ -226,7 +226,7 @@ function HomePage() {
       </main>
 
       <footer className="footer">
-        <p>Loto aplikacija - Demo projekt</p>
+        <p>Loto aplikacija</p>
       </footer>
     </div>
   );
