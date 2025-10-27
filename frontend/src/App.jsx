@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import SubmitTicketPage from './pages/SubmitTicketPage';
 import TicketViewPage from './pages/TicketViewPage';
+import RoundDetailPage from './pages/RoundDetailPage';
 import './App.css';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/submit" element={<SubmitTicketPage />} />
         <Route path="/ticket/:ticketId" element={<TicketViewPage />} />
+        <Route path="/round/:roundId" element={<RoundDetailPage />} />
       </Routes>
     </div>
   );

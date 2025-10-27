@@ -152,6 +152,45 @@ app.get("/tickets/:ticketId", async (req, res) => {
   }
 });
 
+app.get("/my-tickets", checkUserAuth, async (req, res) => {
+  try {
+    const userId = req.auth?.payload?.sub;
+    
+    if (!userId) {
+      return res.status(401).json({error: "unauthorized"});
+    }
+
+    const ticketsSnap = await db.collection("tickets")
+      .where("userId", "==", userId)
+      .orderBy("createdAt", "desc")
+      .limit(20)
+      .get();
+
+    const tickets = await Promise.all(
+      ticketsSnap.docs.map(async (doc) => {
+        const data = doc.data();
+        const roundId = data.roundId;
+        
+        const resultsDoc = await db.collection("roundResults").doc(roundId).get();
+        
+        return {
+          id: doc.id,
+          idNumber: data.idNumber,
+          numbers: data.numbers,
+          roundId,
+          createdAt: data.createdAt?.toDate?.()?.toISOString() || null,
+          results: resultsDoc.exists ? resultsDoc.data()?.numbers : null,
+        };
+      })
+    );
+
+    return res.json(tickets);
+  } catch (error) {
+    console.error("my-tickets error:", error);
+    return res.status(500).json({error: "internal_error"});
+  }
+});
+
 app.get("/rounds/history", async (_req, res) => {
   try {
     const roundsSnap = await db.collection("rounds")

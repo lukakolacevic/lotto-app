@@ -5,15 +5,19 @@ import { Link } from 'react-router-dom';
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001/lotto-app-51b1f/us-central1/api';
 
 function HomePage() {
-  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
+  const { loginWithRedirect, logout, user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
   const [status, setStatus] = useState(null);
   const [history, setHistory] = useState([]);
+  const [myTickets, setMyTickets] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStatus();
     fetchHistory();
-  }, []);
+    if (isAuthenticated) {
+      fetchMyTickets();
+    }
+  }, [isAuthenticated]);
 
   const fetchStatus = async () => {
     try {
@@ -34,6 +38,23 @@ function HomePage() {
       setHistory(data);
     } catch (error) {
       console.error('Error fetching history:', error);
+    }
+  };
+
+  const fetchMyTickets = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      const response = await fetch(`${API_BASE}/my-tickets`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setMyTickets(data);
+      }
+    } catch (error) {
+      console.error('Error fetching my tickets:', error);
     }
   };
 
@@ -118,8 +139,43 @@ function HomePage() {
           )}
         </section>
 
-        <section className="history-section">
-          <h2>Rezultati prethodnih 5 kola</h2>
+        <div className="two-column-section">
+          {isAuthenticated && (
+            <section className="my-tickets-section">
+              <h2>Moji listići</h2>
+              {myTickets.length === 0 ? (
+                <div className="info-box">
+                  <p>Nemate uplaćenih listića.</p>
+                </div>
+              ) : (
+                <div className="tickets-list">
+                  {myTickets.map((ticket) => (
+                    <Link key={ticket.id} to={`/ticket/${ticket.id}`} className="ticket-item">
+                      <div className="ticket-item-header">
+                        <span className="ticket-id">ID: {ticket.id.substring(0, 8)}...</span>
+                        <span className="ticket-date">
+                          {ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString('hr-HR') : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="ticket-item-numbers">
+                        {ticket.numbers.map((num, idx) => (
+                          <span key={idx} className="mini-ball">{num}</span>
+                        ))}
+                      </div>
+                      {ticket.results && (
+                        <div className="ticket-item-status">
+                          ✓ Rezultati dostupni
+                        </div>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          <section className="history-section">
+            <h2>Rezultati prethodnih 5 kola</h2>
           {history.length === 0 ? (
             <div className="info-box">
               <p>Nema zatvorenih kola.</p>
@@ -127,7 +183,7 @@ function HomePage() {
           ) : (
             <div className="history-list">
               {history.map((round) => (
-                <div key={round.id} className="history-item">
+                <Link key={round.id} to={`/round/${round.id}`} className="history-item clickable">
                   <div className="history-header">
                     <span className={`badge ${round.active ? 'active' : 'closed'}`}>
                       {round.active ? 'Aktivno' : 'Zatvoreno'}
@@ -155,11 +211,12 @@ function HomePage() {
                       </div>
                     </div>
                   )}
-                </div>
+                </Link>
               ))}
             </div>
           )}
-        </section>
+          </section>
+        </div>
       </main>
 
       <footer className="footer">
