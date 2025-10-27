@@ -65,13 +65,17 @@ function TicketViewPage() {
 
       <main className="ticket-view">
         <div className="ticket-card">
+          <div className="ticket-header-banner">
+            <h2>Informacije o listiću</h2>
+          </div>
+
           <div className="ticket-info">
             <div className="info-item">
               <span className="label">ID listića:</span>
               <span className="value mono">{ticket.ticketId}</span>
             </div>
             <div className="info-item">
-              <span className="label">Broj osobne:</span>
+              <span className="label">Broj osobne iskaznice:</span>
               <span className="value">{ticket.idNumber}</span>
             </div>
             <div className="info-item">
@@ -81,7 +85,7 @@ function TicketViewPage() {
           </div>
 
           <div className="ticket-numbers">
-            <h3>Vaši brojevi:</h3>
+            <h3>Vaši odabrani brojevi:</h3>
             <div className="numbers">
               {ticket.numbers.map((num, idx) => (
                 <span 
@@ -92,12 +96,17 @@ function TicketViewPage() {
                 </span>
               ))}
             </div>
+            <p className="numbers-count">
+              Ukupno odabranih brojeva: <strong>{ticket.numbers.length}</strong>
+            </p>
           </div>
+
+          <div className="divider"></div>
 
           {ticket.results ? (
             <>
               <div className="results-section">
-                <h3>Izvučeni brojevi:</h3>
+                <h3>Izvučeni brojevi u ovom kolu:</h3>
                 <div className="numbers">
                   {ticket.results.map((num, idx) => (
                     <span 
@@ -111,22 +120,29 @@ function TicketViewPage() {
               </div>
 
               <div className={`match-result ${matches.length > 0 ? 'success' : ''}`}>
-                <h2>Pogodaka: {matches.length}/{ticket.results.length}</h2>
-                {matches.length > 0 && (
+                <h2>
+                  {matches.length > 0 ? '🎉 ' : ''}
+                  Pogodaka: {matches.length}/{ticket.results.length}
+                </h2>
+                {matches.length > 0 ? (
                   <div className="matched-numbers">
-                    <p>Pogođeni brojevi:</p>
+                    <p>Čestitamo! Pogodili ste sljedeće brojeve:</p>
                     <div className="numbers">
                       {matches.map((num, idx) => (
                         <span key={idx} className="number-ball match">{num}</span>
                       ))}
                     </div>
                   </div>
+                ) : (
+                  <p className="no-matches">Nažalost, niste pogodili nijedan broj u ovom kolu.</p>
                 )}
               </div>
             </>
           ) : (
-            <div className="info-box">
-              <p>⏳ Brojevi još nisu izvučeni za ovo kolo.</p>
+            <div className="info-box warning no-results">
+              <h3>Rezultati još nisu dostupni</h3>
+              <p>⏳ Brojevi za ovo kolo još nisu izvučeni.</p>
+              <p>Molimo pokušajte kasnije ili provjerite na početnoj stranici kada će rezultati biti objavljeni.</p>
             </div>
           )}
         </div>

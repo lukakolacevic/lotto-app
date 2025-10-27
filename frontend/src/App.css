@@ -339,6 +339,20 @@ body {
   margin: 0 auto;
 }
 
+.ticket-header-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.ticket-header-banner h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
 .ticket-info {
   background: #f8f9fa;
   padding: 1.5rem;
@@ -357,11 +371,47 @@ body {
   font-size: 1.2rem;
 }
 
+.numbers-count {
+  text-align: center;
+  margin-top: 1rem;
+  color: #666;
+  font-size: 1rem;
+}
+
+.divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #667eea, transparent);
+  margin: 2rem 0;
+}
+
 .results-section {
   margin: 2rem 0;
   padding: 1.5rem;
   background: #f8f9fa;
   border-radius: 8px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+}
+
+.no-results h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.no-results p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.no-matches {
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+  margin-top: 1rem;
 }
 
 .match-result {
