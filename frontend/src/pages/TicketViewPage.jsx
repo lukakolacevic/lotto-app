@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5173/api';
+const API_BASE =
+  import.meta.env.VITE_API_BASE ||
+  "https://us-central1-lotto-app-51b1f.cloudfunctions.net/api";
 
 function TicketViewPage() {
   const { ticketId } = useParams();

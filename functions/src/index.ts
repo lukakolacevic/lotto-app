@@ -17,9 +17,9 @@ const app = express();
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json());
 
-const AUTH0_DOMAIN = "comperio-app.eu.auth0.com";
-const AUTH0_AUDIENCE = "https://lotto-api";
-const PUBLIC_URL = "http://localhost:5173";
+const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || "comperio-app.eu.auth0.com";
+const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE || "https://lotto-api";
+const PUBLIC_URL = process.env.PUBLIC_URL || "https://lotto-app-51b1f.web.app";
 
 const checkM2MAuth = auth({
   audience: AUTH0_AUDIENCE,

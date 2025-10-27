@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "lotto-app-51b1f"
-  }
+  },
+  "targets": {
+    "lotto-app-51b1f": {
+      "hosting": {
+        "default": [
+          "lotto-app-51b1f"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
