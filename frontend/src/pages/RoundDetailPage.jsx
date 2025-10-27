@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-const API_BASE =
-  import.meta.env.VITE_API_BASE ||
-  "https://us-central1-lotto-app-51b1f.cloudfunctions.net/api";
+const isLocal = window.location.hostname === "localhost";
+
+export const API_BASE = isLocal
+  ? "http://127.0.0.1:5001/lotto-app-51b1f/us-central1/api"
+  : "https://us-central1-lotto-app-51b1f.cloudfunctions.net/api";
 
 function RoundDetailPage() {
   const { roundId } = useParams();
